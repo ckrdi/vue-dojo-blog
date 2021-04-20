@@ -1,18 +1,31 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <router-link :to="{ name: 'Create' }">New Post</router-link>
+    <div v-for="post in posts" :key="post.id">
+      <PostList :id="post.id" />
+    </div>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import { ref } from "vue";
+import PostList from "../components/PostList.vue";
 
 export default {
-  name: 'Home',
+  name: "Home",
   components: {
-    HelloWorld
-  }
-}
+    PostList,
+  },
+  setup() {
+    const posts = ref("");
+
+    const getPosts = async () => {
+      const res = await fetch("http://localhost:3000/posts");
+      const data = await res.json();
+      posts.value = data;
+    };
+    getPosts();
+    return { posts };
+  },
+};
 </script>
