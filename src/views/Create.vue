@@ -15,9 +15,10 @@
 
 <script>
 import { ref } from "@vue/reactivity";
+import { useRouter } from "vue-router";
 
 export default {
-  setup({ root }) {
+  setup() {
     const title = ref("");
     const body = ref("");
     const tag = ref("");
@@ -31,6 +32,9 @@ export default {
       tag.value = "";
     };
 
+    const router = useRouter();
+    // router.go(1)
+
     const handleSubmit = async () => {
       const newPost = {
         title: title.value,
@@ -42,10 +46,7 @@ export default {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newPost),
       }).catch((err) => console.log(err));
-
-      title.value = "";
-      body.value = "";
-      tags.value = [];
+      router.push({ name: "Home" });
     };
 
     return {
