@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 export default {
   props: {
     id: Number,
@@ -26,7 +26,7 @@ export default {
       post.value = data;
       snippet.value = post.value.body.substring(0, 50) + "...";
     };
-    getPost();
+    onMounted(getPost);
 
     return { post, snippet };
   },

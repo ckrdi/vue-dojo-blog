@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 export default {
   props: ["id"],
   setup(props) {
@@ -20,7 +20,7 @@ export default {
       const data = await res.json();
       post.value = data;
     };
-    getPost();
+    onMounted(getPost);
 
     return { post };
   },

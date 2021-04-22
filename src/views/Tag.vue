@@ -7,9 +7,10 @@
 </template>
 
 <script>
-import { computed, onMounted, ref, toRefs } from "vue";
+import getPosts from "../composables/getPosts";
+import { computed, toRefs } from "vue";
 import PostList from "../components/PostList.vue";
-import { useRoute } from "vue-router";
+// import { useRoute } from "vue-router";
 
 export default {
   name: "Tag",
@@ -20,13 +21,7 @@ export default {
     tag: String,
   },
   setup(props) {
-    const posts = ref([]);
-    const getPosts = async () => {
-      const res = await fetch("http://localhost:3000/posts");
-      const data = await res.json();
-      posts.value = data;
-    };
-    onMounted(getPosts);
+    const { posts } = getPosts();
 
     // we could use route.params.tag instead of passing a prop
     // const route = useRoute();

@@ -5,26 +5,27 @@
       <PostList :id="post.id" />
     </div>
   </div>
+  <!-- <InputForm v-model="pageTitle" />
+  <input type="text" v-model="pageTitle" /> -->
+  <TagList />
 </template>
 
 <script>
-import { ref } from "vue";
+import getPosts from "../composables/getPosts";
 import PostList from "../components/PostList.vue";
+import InputForm from "../components/InputForm.vue";
+import TagList from "../components/TagList.vue";
 
 export default {
   name: "Home",
   components: {
     PostList,
+    InputForm,
+    TagList,
   },
   setup() {
-    const posts = ref("");
-
-    const getPosts = async () => {
-      const res = await fetch("http://localhost:3000/posts");
-      const data = await res.json();
-      posts.value = data;
-    };
-    getPosts();
+    const { posts } = getPosts();
+    // const pageTitle = ref("hello");
     return { posts };
   },
 };
