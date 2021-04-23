@@ -4,18 +4,21 @@
       <PostList :id="post.id" />
     </div>
   </div>
+  <TagList />
 </template>
 
 <script>
 import getPosts from "../composables/getPosts";
 import { computed, toRefs } from "vue";
 import PostList from "../components/PostList.vue";
+import TagList from "../components/TagList.vue";
 // import { useRoute } from "vue-router";
 
 export default {
   name: "Tag",
   components: {
     PostList,
+    TagList,
   },
   props: {
     tag: String,
