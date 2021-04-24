@@ -1,7 +1,7 @@
 <template>
-  <h2>{{ post.title }}</h2>
-  <p>{{ post.body }}</p>
-  <span v-for="tag in post.tags" :key="tag">
+  <h2>{{ posts.title }}</h2>
+  <p>{{ posts.body }}</p>
+  <span v-for="tag in posts.tags" :key="tag">
     <router-link :to="{ name: 'Tag', params: { tag: tag } }"
       >#{{ tag }}</router-link
     ></span
@@ -9,20 +9,15 @@
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
+import { onMounted } from "vue";
+import getPosts from "../composables/getPosts";
 export default {
   props: ["id"],
   setup(props) {
-    const post = ref("");
+    const { posts, getData } = getPosts(props.id);
+    onMounted(getData);
 
-    const getPost = async () => {
-      const res = await fetch(`http://localhost:3000/posts/${props.id}`);
-      const data = await res.json();
-      post.value = data;
-    };
-    onMounted(getPost);
-
-    return { post };
+    return { posts };
   },
 };
 </script>

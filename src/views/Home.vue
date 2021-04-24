@@ -15,6 +15,7 @@ import getPosts from "../composables/getPosts";
 import PostList from "../components/PostList.vue";
 import InputForm from "../components/InputForm.vue";
 import TagList from "../components/TagList.vue";
+import { onMounted } from "@vue/runtime-core";
 
 export default {
   name: "Home",
@@ -24,7 +25,8 @@ export default {
     TagList,
   },
   setup() {
-    const { posts } = getPosts();
+    const { posts, getData } = getPosts();
+    onMounted(getData);
     // const pageTitle = ref("hello");
     return { posts };
   },

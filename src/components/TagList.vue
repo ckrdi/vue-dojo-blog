@@ -7,7 +7,8 @@
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
+import getPosts from "../composables/getPosts";
 
 export default {
   setup() {
@@ -22,14 +23,9 @@ export default {
       tags.value = [...tagSet];
     };
 
-    const posts = ref([]);
-    const getPosts = async () => {
-      const res = await fetch("http://localhost:3000/posts");
-      const data = await res.json();
-      posts.value = data;
-      getTags();
-    };
-    onMounted(getPosts);
+    const { posts, getData } = getPosts();
+    getData().then(() => getTags());
+
     return { posts, tags };
   },
 };

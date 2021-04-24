@@ -1,9 +1,9 @@
 <template>
   <router-link :to="{ name: 'SinglePost', params: { id: id } }">
-    <h2>{{ post.title }}</h2>
+    <h2>{{ posts.title }}</h2>
   </router-link>
   <p>{{ snippet }}</p>
-  <span v-for="tag in post.tags" :key="tag">
+  <span v-for="tag in posts.tags" :key="tag">
     <router-link :to="{ name: 'Tag', params: { tag: tag } }"
       >#{{ tag }}
     </router-link>
@@ -11,24 +11,21 @@
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
+import getPosts from "../composables/getPosts";
 export default {
   props: {
     id: Number,
   },
   setup(props) {
-    const post = ref("");
     const snippet = ref("");
 
-    const getPost = async () => {
-      const res = await fetch(`http://localhost:3000/posts/${props.id}`);
-      const data = await res.json();
-      post.value = data;
-      snippet.value = post.value.body.substring(0, 50) + "...";
-    };
-    onMounted(getPost);
+    const { posts, getData } = getPosts(props.id);
+    getData().then(() => {
+      snippet.value = posts.value.body.substring(0, 50) + "...";
+    });
 
-    return { post, snippet };
+    return { posts, snippet };
   },
 };
 </script>

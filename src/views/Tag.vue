@@ -9,7 +9,7 @@
 
 <script>
 import getPosts from "../composables/getPosts";
-import { computed, toRefs } from "vue";
+import { computed, onMounted, toRefs } from "vue";
 import PostList from "../components/PostList.vue";
 import TagList from "../components/TagList.vue";
 // import { useRoute } from "vue-router";
@@ -24,7 +24,8 @@ export default {
     tag: String,
   },
   setup(props) {
-    const { posts } = getPosts();
+    const { posts, getData } = getPosts();
+    onMounted(getData);
 
     // we could use route.params.tag instead of passing a prop
     // const route = useRoute();
