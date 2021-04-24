@@ -14,9 +14,7 @@
 import { ref } from "vue";
 import getPosts from "../composables/getPosts";
 export default {
-  props: {
-    id: Number,
-  },
+  props: ["id"],
   setup(props) {
     const snippet = ref("");
 

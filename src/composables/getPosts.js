@@ -1,11 +1,21 @@
 import { ref } from "vue";
+import { projectFirestore } from "../firebase/config";
 
 const getPosts = (id = "") => {
   const posts = ref([]);
   const getData = async () => {
-    const res = await fetch(`http://localhost:3000/posts/${id}`);
-    const data = await res.json();
-    posts.value = data;
+    if (id) {
+      const res = await projectFirestore
+        .collection("posts")
+        .doc(id)
+        .get();
+      posts.value = { ...res.data(), id: res.id };
+    } else {
+      const res = await projectFirestore.collection("posts").get();
+      posts.value = res.docs.map((doc) => {
+        return { ...doc.data(), id: doc.id };
+      });
+    }
   };
 
   return { posts, getData };
