@@ -2,59 +2,45 @@
   <div class="create">
     <form @submit.prevent="handleSubmit">
       <label>Title:</label>
-      <input type="text" v-model="title" required />
+      <input type="text" v-model="posts.title" required />
       <label>Content:</label>
-      <textarea v-model="body" required></textarea>
-      <label>Tags (press enter to a tag):</label>
-      <input type="text" v-model="tag" @keydown.enter.prevent="handleKeydown" />
-      <div v-for="tag in tags" :key="tag" class="pill">#{{ tag }}</div>
-      <button>Add a New Post</button>
+      <textarea v-model="posts.body" required></textarea>
+      <label>Tags: use comma to separate tag</label>
+      <input type="text" v-model="posts.tags" />
+      <button>Save Post</button>
     </form>
   </div>
 </template>
 
 <script>
-import { ref } from "@vue/reactivity";
+import { onMounted, ref, toRefs } from "@vue/reactivity";
 import { useRouter } from "vue-router";
-import { projectFirestore, timestamp } from "../firebase/config";
+import getPosts from "../composables/getPosts";
+import { projectFirestore } from "../firebase/config";
 
 export default {
-  setup() {
-    const title = ref("");
-    const body = ref("");
-    const tag = ref("");
-    const tags = ref([]);
-
-    const handleKeydown = () => {
-      if (!tags.value.includes(tag.value)) {
-        tag.value = tag.value.replace(/\s/, ""); // remove whitespace, \s is for space
-        tags.value.push(tag.value);
-      }
-      tag.value = "";
-    };
+  props: ["id"],
+  setup(props) {
+    // const { id } = toRefs(props);
+    const { posts, getData } = getPosts(props.id);
+    getData();
 
     const router = useRouter();
-    // router.go(1)
 
     const handleSubmit = async () => {
-      const newPost = {
-        title: title.value,
-        body: body.value,
-        tags: tags.value,
-        createdAt: timestamp(),
+      const updatePost = {
+        title: posts.value.title,
+        body: posts.value.body,
+        tags: posts.value.tags.split(","),
       };
-      await projectFirestore.collection("posts").add(newPost);
+      await projectFirestore
+        .collection("posts")
+        .doc(props.id)
+        .update(updatePost);
       router.push({ name: "Home" });
     };
 
-    return {
-      title,
-      body,
-      tag,
-      tags,
-      handleKeydown,
-      handleSubmit,
-    };
+    return { posts, handleSubmit };
   },
 };
 </script>
